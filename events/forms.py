@@ -1,6 +1,6 @@
 
 from django import forms
-from events.models  import  Event
+from events.models  import  Event, Category
 
 class StyleFromMixin:
     default_classes ="w-full max-w-lg p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#213555] mb-5 transition duration-300 ease-in-out"
@@ -45,4 +45,22 @@ class EventModelForm(forms.ModelForm):
             }),
         }
 
-    
+
+class CategoryModelForm(forms.ModelForm):
+     class Meta:
+        model = Category
+        fields = [
+            'name', 
+            'description', 
+        ] 
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': 'w-full max-w-lg p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#213555] mb-5 transition duration-300 ease-in-out',
+                'placeholder': 'Enter category Name',
+            }),
+            'description': forms.Textarea(attrs={
+                'class': 'w-full max-w-lg p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#213555] mb-5 transition duration-300 ease-in-out',
+                'placeholder': 'Enter event description',
+                'rows': 4,
+            }),
+        }

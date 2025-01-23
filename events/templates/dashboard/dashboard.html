@@ -22,13 +22,25 @@
       {% comment %} Header   {% endcomment %}
       <header class="flex justify-between items-center mb-8">
         <h1 class="text-2xl font-semibold">Event Management Dashboard</h1>
-
+        <nav class="hidden md:block">
+          <ul class="flex items-center justify-center gap-3 text-lg">
+            <li class="bg-[#213555] text-white py-1.5 px-2 rounded-md">
+              <a href="{% url 'dahsboard-category' %}">All Categories</a>
+            </li>
+            <li class="bg-[#213555] text-white py-1.5 px-2 rounded-md">
+              <a href="">All Participant</a>
+            </li>
+          </ul>
+        </nav>
         <div class="flex items-center gap-4">
           <a href="{% url 'home' %}" class="p-2 rounded-md bg-[#213555] hover:bg-[#3E5879] text-white">
             Home
           </a>
           <a href="{% url 'create-event' %}" class="p-2 rounded-md bg-[#213555] hover:bg-[#3E5879] text-white">
             Create Event
+          </a>
+          <a href="{% url 'create-category' %}" class="p-2 rounded-md bg-[#213555] hover:bg-[#3E5879] text-white">
+            Create Category
           </a>
         </div>
       </header>

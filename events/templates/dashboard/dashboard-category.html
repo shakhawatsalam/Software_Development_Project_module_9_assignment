@@ -1,0 +1,58 @@
+{% extends "dashboard/dashboard.html" %}
+{% comment %} {% block title %}Manager Dashboard{% endblock title %} {% endcomment %}
+{% block events %}
+
+  {% if  messages %}
+    {% for message in messages %}
+      <div class='px-2 py-1 rounded-md {% if message.tags == 'success' %} bg-red-500 {% endif %}'>{{message}}</div>
+    {% endfor %}
+  {% endif %}
+  <div class="bg-white rounded-xl shadow-sm">
+    <div
+      class="grid grid-cols-3 gap-4 items-center p-4 border-b border-gray-100 text-sm text-gray-500">
+      <div>NAME</div>
+      <div>Description</div>
+      <div>EDIT/DELETE</div>
+    </div>
+          {% comment %} Task Items   {% endcomment %}
+    <div class="divide-y divide-gray-100">
+             {% comment %} Task 1  {% endcomment %}
+
+      {% for category in categories %} 
+
+        <div class="grid grid-cols-3 gap-4 p-4 items-center">
+          <div class="flex items-center gap-2">
+            <div class="w-2 h-2 rounded-full bg-green-500"></div>
+            <span>{{category.name}}</span>
+          </div>
+          <div>
+            <span
+              class=""
+            >{{category.description}}</span
+              >
+            </div>
+            
+
+
+             
+
+            
+             <div class="flex items-center gap-4">
+              <a href="{% url 'update-category' category.id %}" class="px-2 py-1 rounded-md bg-[#77B254] hover:bg-[#5B913B] text-white">
+                Edit
+              </a>
+              <form action='{% url "delete-category" category.id %}' method="POST">
+                {% csrf_token %}
+                <button class="px-2 py-1 rounded-md bg-[#D2665A] hover:bg-[#B82132] text-white">
+                  DELETE
+                </button>
+              </form>
+            </div> 
+          </div>
+
+     {% endfor %}  
+
+    </div>
+  </div>
+
+{% endblock events %}
