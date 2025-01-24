@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import HttpResponse
-from events.forms import EventModelForm, CategoryModelForm
-from events.models import Event, Category
+from events.forms import EventModelForm, CategoryModelForm, ParticipantModelForm
+from events.models import Event, Category , Participant
 # Create your views here.
 
 def home_page(request):
@@ -81,7 +81,7 @@ def update_category(request,  id):
     context = {"form" : category_form, "id" :  id}
     return render(request, 'create-category.html', context)
 
-
+# Delete Category
 def  delete_category(request,id):
     if request.method == 'POST':
         category = Category.objects.get(id=id)
@@ -91,3 +91,49 @@ def  delete_category(request,id):
     else:
         messages.error(request, 'Some thing went wrong')
         return  redirect('dahsboard-category')
+
+
+
+# Dashboard Category
+def deshboard_participant(request):
+    participant = Participant.objects.all()
+    context = {"participants" : participant}
+    return  render(request, 'dashboard/dashboard-participant.html', context)
+  
+# Create participant
+def create_participant(request):
+    participant_form = ParticipantModelForm()
+    if request.method == "POST":
+        participant_form = ParticipantModelForm(request.POST)
+        if participant_form.is_valid():
+            participant_form.save()
+            messages.success(request,"Participant Created Successfully")
+            return redirect('create-participant')
+    context = {"form" : participant_form}
+    return render(request, 'create-participant.html', context)
+
+
+# Update participant
+def update_participant(request,id):
+    participant = Participant.objects.get(id=id)
+    participant_form = ParticipantModelForm(instance=participant)
+    if request.method == "POST":
+        participant_form = ParticipantModelForm(request.POST, instance=participant)
+        if participant_form.is_valid():
+            participant_form.save()
+            messages.success(request,"Participant Updated Successfully")
+            return redirect('update-participant', id)
+    context = {"form" : participant_form, "id" :  id}
+    return render(request, 'create-participant.html', context)
+    
+    
+# Delete Category
+def  delete_participant(request,id):
+    if request.method == 'POST':
+        participant = Participant.objects.get(id=id)
+        participant.delete()
+        messages.success(request, 'Participant Deleted Successfully')
+        return  redirect('dahsboard-participant',)
+    else:
+        messages.error(request, 'Some thing went wrong')
+        return  redirect('dahsboard-participant')    

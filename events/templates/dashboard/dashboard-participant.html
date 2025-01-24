@@ -1,7 +1,7 @@
 {% extends "dashboard/dashboard.html" %}
 {% comment %} {% block title %}Manager Dashboard{% endblock title %} {% endcomment %}
 {% block events %}
-<h1  class="m-5 text text-center text-xl font-semibold">All Categories</h1>
+<h1  class="m-5 text text-center text-xl font-semibold">All Participant</h1>
   {% if  messages %}
     {% for message in messages %}
       <div class='px-2 py-1 rounded-md {% if message.tags == 'success' %} bg-red-500 {% endif %}'>{{message}}</div>
@@ -12,24 +12,24 @@
     <div
       class="grid grid-cols-3 gap-4 items-center p-4 border-b border-gray-100 text-sm text-gray-500">
       <div>NAME</div>
-      <div>Description</div>
+      <div>Email</div>
       <div>EDIT/DELETE</div>
     </div>
           {% comment %} Task Items   {% endcomment %}
     <div class="divide-y divide-gray-100">
              {% comment %} Task 1  {% endcomment %}
 
-      {% for category in categories %} 
+       {% for participant in participants %}  
 
         <div class="grid grid-cols-3 gap-4 p-4 items-center">
           <div class="flex items-center gap-2">
             <div class="w-2 h-2 rounded-full bg-green-500"></div>
-            <span>{{category.name}}</span>
+            <span>{{participant.name}}</span>
           </div>
           <div>
             <span
               class=""
-            >{{category.description}}</span
+            >{{participant.email}}</span
               >
             </div>
             
@@ -38,20 +38,20 @@
              
 
             
-             <div class="flex items-center gap-4">
-              <a href="{% url 'update-category' category.id %}" class="px-2 py-1 rounded-md bg-[#77B254] hover:bg-[#5B913B] text-white">
+              <div class="flex items-center gap-4">
+              <a href="{% url 'update-participant' participant.id %}" class="px-2 py-1 rounded-md bg-[#77B254] hover:bg-[#5B913B] text-white">
                 Edit
               </a>
-              <form action='{% url "delete-category" category.id %}' method="POST">
+              <form action='{% url "delete-participant" participant.id %}' method="POST">
                 {% csrf_token %}
                 <button class="px-2 py-1 rounded-md bg-[#D2665A] hover:bg-[#B82132] text-white">
                   DELETE
                 </button>
               </form>
-            </div> 
+            </div>  
           </div>
 
-     {% endfor %}  
+      {% endfor %}   
 
     </div>
   </div>
