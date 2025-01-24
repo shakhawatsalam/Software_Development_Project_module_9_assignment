@@ -13,6 +13,7 @@
       class="grid grid-cols-3 gap-4 items-center p-4 border-b border-gray-100 text-sm text-gray-500">
       <div>NAME</div>
       <div>Description</div>
+      {% comment %} <div>Events</div> {% endcomment %}
       <div>EDIT/DELETE</div>
     </div>
           {% comment %} Task Items   {% endcomment %}
@@ -32,6 +33,7 @@
             >{{category.description}}</span
               >
             </div>
+            {% comment %} <div>{{counts.total_events}}</div> {% endcomment %}
             
 
 

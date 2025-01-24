@@ -3,14 +3,52 @@ from django.contrib import messages
 from django.http import HttpResponse
 from events.forms import EventModelForm, CategoryModelForm, ParticipantModelForm
 from events.models import Event, Category , Participant
+from datetime import date, timedelta
+from django.db.models import Q, Count, Max, Min, Avg
 # Create your views here.
 
 def home_page(request):
-    return  render(request, 'Home/home.html',)
+    search_value= request.GET.get('search')
+    if search_value:
+        events = Event.objects.filter(Q(name__icontains=search_value) | Q(location__icontains=search_value))
+    else:
+        events = Event.objects.all()
+    context ={"events" : events}
+    return  render(request, 'Home/home.html' ,context)
 
+# 
+def dashboard_grid(request) :
+    
+    return  render(request, 'dashboard/dashboard.html',)
+# All Event
 def  dashboard_page(request):
-    events = Event.objects.all()
-    context = {"events" : events}
+    
+    counts =  Event.objects.aggregate(
+        total_participant = Count('events',distinct=True),
+        total_events = Count('id',distinct=True),
+        upcoming_events =Count('id', filter=Q(date__gt= date.today())),
+        past_events =Count('id', filter=Q(date__lt=date.today()))  
+    )
+    type = request.GET.get('type', 'all')
+
+    if type == 'total_events':
+        events = Event.objects.all().annotate(
+            total_participant=Count('events', distinct=True)
+        ) 
+    if type == 'upcoming_events':
+        events = Event.objects.filter(date__gt= date.today()).annotate(
+            total_participant=Count('events', distinct=True)
+        ) 
+    if type == 'past_events':
+        events = Event.objects.filter(date__lt= date.today()).annotate(
+            total_participant=Count('events', distinct=True)
+        ) 
+    if type == 'all':
+        events = Event.objects.filter(date=date.today()).annotate(
+            total_participant=Count('events', distinct=True)
+        ) 
+        
+    context = {"events" : events, "counts": counts}
     return  render(request, 'dashboard/dashboard-event.html', context)
 
 # Create Event
@@ -54,7 +92,7 @@ def delete_event(request, id):
 # Dashboard Category
 def deshboard_category(request):
     category = Category.objects.all()
-    context = {"categories" : category}
+    context = {"categories" : category, }
     return  render(request, 'dashboard/dashboard-category.html', context)
 # Create Category
 def create_category(request):

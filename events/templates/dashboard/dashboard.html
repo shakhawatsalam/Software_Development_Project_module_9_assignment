@@ -55,12 +55,12 @@
         {% comment %} Stats Grid  {% endcomment %}
         <div class="grid md:grid-cols-4 gap-6 mb-8">
           <!-- Total Task  -->
-          <a href="">
+          <a href="{% url 'dahsboard-participant' %}">
             <div class="bg-white rounded-xl p-6 shadow-sm">
               <h3 class="text-sm font-medium text-gray-500 mb-4">TOTAL PARTICIPANTS</h3>
               <div class="flex justify-between items-start">
                 <div>
-                  <p class="text-3xl font-semibold mb-1">10</p>
+                  <p class="text-3xl font-semibold mb-1">{{counts.total_participant}}</p>
                   <p class="text-gray-500 text-sm">11 last month</p>
                 </div>
                 <div class="bg-blue-100 p-3 rounded-full">
@@ -81,14 +81,14 @@
             </div>
           </a>
           <!-- Completed Task  -->
-          <a href="">
+          <a  href="{% url 'dahsboard' %}?type=total_events" >
             <div class="bg-white rounded-xl p-6 shadow-sm">
               <h3 class="text-sm font-medium text-gray-500 mb-4">
                 TOTAL EVENTS
               </h3>
               <div class="flex justify-between items-start">
                 <div>
-                  <p class="text-3xl font-semibold mb-1">10</p>
+                  <p class="text-3xl font-semibold mb-1">{{counts.total_events}}</p>
                   <p class="text-gray-500 text-sm">11 last month</p>
                 </div>
                 <div class="bg-green-100 p-3 rounded-full">
@@ -107,16 +107,16 @@
                 </div>
               </div>
             </div>
-          </a>
+          </>
           <!-- Task In Progress  -->
-          <a href="">
+          <a href="{% url 'dahsboard' %}?type=upcoming_events">
             <div class="bg-white rounded-xl p-6 shadow-sm">
               <h3 class="text-sm font-medium text-gray-500 mb-4">
                 UPCOMING EVENTS
               </h3>
               <div class="flex justify-between items-start">
                 <div>
-                  <p class="text-3xl font-semibold mb-1">10</p>
+                  <p class="text-3xl font-semibold mb-1">{{counts.upcoming_events}}</p>
                   <p class="text-gray-500 text-sm">11 last month</p>
                 </div>
                 <div class="bg-yellow-100 p-3 rounded-full">
@@ -137,12 +137,12 @@
             </div>
           </a>
            {% comment %} pending Task  {% endcomment %}
-          <a href="">
+          <a href="{% url 'dahsboard' %}?type=past_events">
             <div class="bg-white rounded-xl p-6 shadow-sm">
               <h3 class="text-sm font-medium text-gray-500 mb-4">PAST EVENTS</h3>
               <div class="flex justify-between items-start">
                 <div>
-                  <p class="text-3xl font-semibold mb-1">10</p>
+                  <p class="text-3xl font-semibold mb-1">{{counts.past_events}}</p>
                   <p class="text-gray-500 text-sm">11 last month</p>
                 </div>
                 <div class="bg-purple-100 p-3 rounded-full">

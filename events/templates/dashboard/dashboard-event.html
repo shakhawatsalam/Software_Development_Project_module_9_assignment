@@ -1,7 +1,6 @@
 {% extends "dashboard/dashboard.html" %}
 {% comment %} {% block title %}Manager Dashboard{% endblock title %} {% endcomment %}
 {% block events %}
-
   {% if  messages %}
     {% for message in messages %}
       <div class='px-2 py-1 rounded-md {% if message.tags == 'success' %} bg-red-500 {% endif %}'>{{message}}</div>
@@ -9,11 +8,11 @@
   {% endif %}
   <div class="bg-white rounded-xl shadow-sm">
     <div
-      class="grid grid-cols-5 gap-4 items-center p-4 border-b border-gray-100 text-sm text-gray-500">
+      class="grid grid-cols-5 gap-3 items-center p-4 border-b border-gray-100 text-sm text-gray-500">
       <div>NAME</div>
       <div>TIME</div>
       <div>DATE</div>
-      <div>LOCATION</div>
+      <div>TOTAL PARTICIPANT</div>
       <div>EDIT/DELETE</div>
     </div>
           {% comment %} Task Items   {% endcomment %}
@@ -42,7 +41,7 @@
               </div>
 
             </div>
-            <div class="">{{event.location}}</div>
+            <div class="">{{event.total_participant}}</div>
             <div class="flex items-center gap-4">
               <a href="{% url 'update-event' event.id %}" class="px-2 py-1 rounded-md bg-[#77B254] hover:bg-[#5B913B] text-white">
                 Edit
