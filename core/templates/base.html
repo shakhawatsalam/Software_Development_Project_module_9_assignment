@@ -36,10 +36,6 @@
           </ul>
         </nav>
         <div class="flex items-center gap-4 relative">
-          {% comment %} <!-- Dashboard Button -->
-          <a href="{% url 'dahsboard' %}" class="p-2 rounded-md bg-[#213555] hover:bg-[#3E5879] text-white">
-            Dashboard
-          </a> {% endcomment %}
          {% comment %} Dropdown Toggle Button {% endcomment %}
           <button
             id="dropdownToggle"
@@ -73,8 +69,50 @@
           </div>
         </div>
       </header>
+      {% comment %} nav heder  {% endcomment %}
       {% block home %}{% endblock home %}
     </div>
+    {% comment %} footer  {% endcomment %}
+     <footer class="bg-gray-800 text-gray-300 py-6 mt-10 rounded-md">
+      <div class="max-w-[1400px] mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+          <div>
+            <h3 class="text-lg font-semibold mb-4">About Us</h3>
+            <p class="text-sm leading-relaxed">
+              We are a leading event management company dedicated to making your special moments unforgettable. Contact us for personalized event planning.
+            </p>
+          </div>
+
+
+          <div>
+            <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+            <ul class="text-sm space-y-2">
+              <li><a href="#" class="hover:text-white">Home</a></li>
+              <li><a href="#" class="hover:text-white">About Us</a></li>
+              <li><a href="#" class="hover:text-white">Services</a></li>
+              <li><a href="#" class="hover:text-white">Contact</a></li>
+            </ul>
+          </div>
+
+
+          <div>
+            <h3 class="text-lg font-semibold mb-4">Contact Us</h3>
+            <p class="text-sm">Phone: +880-123-456-7890</p>
+            <p class="text-sm">Email: info@eventmanagement.com</p>
+            <div class="flex space-x-4 mt-4">
+
+              <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook"></i> Facebook</a>
+              <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i> Twitter</a>
+              <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram"></i> Instagram</a>
+            </div>
+          </div>
+        </div>
+        <div class="border-t border-gray-700 mt-6 pt-4 text-center text-sm">
+          <p>&copy; 2025 Event Management. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
     <script>
       // Toggle dropdown menu visibility
       document.getElementById('dropdownToggle').addEventListener('click', function () {

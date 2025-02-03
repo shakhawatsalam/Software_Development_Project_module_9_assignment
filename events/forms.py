@@ -2,12 +2,49 @@
 from django import forms
 from events.models  import  Event, Category,  Participant
 
-class StyleFromMixin:
+class StyleFormMixin:
     default_classes ="w-full max-w-lg p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#213555] mb-5 transition duration-300 ease-in-out"
+    
+    def __init__(self, *arg, **kwarg):
+        super().__init__(*arg, **kwarg)
+        self.apply_style_widgets()
+        
+        
     def  apply_style_widgets(self):
-        pass
+        for field_name, field in self.fields.items():
+            if isinstance(field.widget, forms.TextInput):
+                field.widget.attrs.update({
+                        'class': self.default_classes,
+                        'placeholder': f"Enter {field.label.lower()}"
+                    })
+            elif isinstance(field.widget, forms.Textarea):
+                field.widget.attrs.update({
+                    'class': f"{self.default_classes} resize-none",
+                    'placeholder':  f"Enter {field.label.lower()}",
+                    'rows': 5
+                })
+            elif isinstance(field.widget, forms.DateInput):
+                field.widget.attrs.update({
+                        'class': self.default_classes,
+                        'placeholder': f"Enter {field.label.lower()}"
+                    })
+            elif isinstance(field.widget, forms.CheckboxSelectMultiple):
+                field.widget.attrs.update({
+                        'class': self.default_classes,
+                        'placeholder': f"Enter {field.label.lower()}"
+                    })
+            else:
+                # print("Inside else")
+                field.widget.attrs.update({
+                    'class': self.default_classes
+                })
 
-class EventModelForm(forms.ModelForm):
+
+
+
+
+
+class EventModelForm(StyleFormMixin,forms.ModelForm):
     class Meta:
         model = Event
         fields = [
@@ -18,55 +55,19 @@ class EventModelForm(forms.ModelForm):
             'location', 
             'category'
         ] 
-        widgets = {
-            'name': forms.TextInput(attrs={
-                'class': 'w-full max-w-lg p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#213555] mb-5 transition duration-300 ease-in-out',
-                'placeholder': 'Enter event name',
-            }),
-            'description': forms.Textarea(attrs={
-                'class': 'w-full max-w-lg p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#213555] mb-5 transition duration-300 ease-in-out',
-                'placeholder': 'Enter event description',
-                'rows': 4,
-            }),
-            'date': forms.DateInput(attrs={
-                'type': 'date',
-                'class': 'w-full max-w-lg p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#213555] mb-5 transition duration-300 ease-in-out',
-            }),
-            'time': forms.TimeInput(attrs={
-                'type': 'time',
-                'class': 'w-full max-w-lg p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#213555] mb-5 transition duration-300 ease-in-out',
-            }),
-            'location': forms.TextInput(attrs={
-                'class': 'w-full max-w-lg p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#213555] mb-5 transition duration-300 ease-in-out',
-                'placeholder': 'Enter event locationsss',
-            }),
-            'category': forms.Select(attrs={
-                'class': 'w-full max-w-lg p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#213555] mb-5 transition duration-300 ease-in-out',
-            }),
-        }
 
 
-class CategoryModelForm(forms.ModelForm):
+class CategoryModelForm(StyleFormMixin,forms.ModelForm):
      class Meta:
         model = Category
         fields = [
             'name', 
             'description', 
         ] 
-        widgets = {
-            'name': forms.TextInput(attrs={
-                'class': 'w-full max-w-lg p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#213555] mb-5 transition duration-300 ease-in-out',
-                'placeholder': 'Enter category Name',
-            }),
-            'description': forms.Textarea(attrs={
-                'class': 'w-full max-w-lg p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#213555] mb-5 transition duration-300 ease-in-out',
-                'placeholder': 'Enter event description',
-                'rows': 4,
-            }),
-        }
+        
         
 
-class ParticipantModelForm(forms.ModelForm):
+class ParticipantModelForm(StyleFormMixin,forms.ModelForm):
     class Meta:
         model = Participant
         fields = [
@@ -74,19 +75,7 @@ class ParticipantModelForm(forms.ModelForm):
             'email', 
             'events'
         ] 
-        widgets = {
-            'name': forms.TextInput(attrs={
-                'class': 'w-full max-w-lg p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#213555] mb-5 transition duration-300 ease-in-out',
-                'placeholder': 'Enter participant name',
-            }),
-            'email': forms.EmailInput(attrs={
-                'class': 'w-full max-w-lg p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#213555] mb-5 transition duration-300 ease-in-out',
-                'placeholder': 'Enter participant email',
-            }),
-            'events': forms.CheckboxSelectMultiple(attrs={
-                'class': 'space-y-2',
-            }),
-        }
+        
         
         
         

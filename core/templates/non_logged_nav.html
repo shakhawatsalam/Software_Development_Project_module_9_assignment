@@ -1,0 +1,24 @@
+<header class="flex justify-between items-center mb-8 border rounded-lg p-3 relative shadow-sm">
+  <h1 class="text-2xl font-semibold">Event Management</h1>
+  <nav class="hidden md:block">
+    <ul class="flex items-center justify-center gap-3 text-lg">
+      <li>
+        <a href="{% url 'home' %}">Home</a>
+      </li>
+      <li>
+        <a href="">About us</a>
+      </li>
+      <li>
+        <a href="">Services</a>
+      </li>
+    </ul>
+  </nav>
+  <div class="flex items-center gap-4">
+    <a href="{% url 'sign-in' %}" class="p-2 rounded-md bg-[#213555] hover:bg-[#3E5879] text-white">
+      Sign in
+    </a>
+    <a href="{% url 'sign-up' %}" class="p-2 rounded-md bg-[#213555] hover:bg-[#3E5879] text-white">
+      Sign in
+    </a>
+  </div>
+</header>

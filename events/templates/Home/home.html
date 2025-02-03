@@ -26,16 +26,16 @@
           placeholder="Search for events..."
           class="w-full max-w-lg p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#213555]"
         />
-         <button type="submit" class="w-12 text-white py-2 rounded-md  bg-[#213555] hover:bg-[#3E5879]">
-            Search
-          </button>
+        <button type="submit" class="w-12 text-white py-2 rounded-md  bg-[#213555] hover:bg-[#3E5879]">
+          Search
+        </button>
       </form>
     </div>
 
             {% comment %} Events Card Grid  {% endcomment %}
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {% comment %} Event Card  {% endcomment %}
-        {% for event in events %}
+      {% for event in events %}
         <div class="bg-white border border-gray-300 rounded-md shadow-md overflow-hidden">
           <div class="h-40 bg-[#D8C4B6] flex justify-center  items-center">
             <h5> Event  Image</h5>
@@ -56,8 +56,8 @@
             </div>
           </div>
         </div>
-        {% endfor %}
-   
+      {% endfor %}
+
     </div>
   </section>
 

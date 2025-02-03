@@ -1,0 +1,49 @@
+<header class="flex justify-between items-center mb-8 border rounded-lg p-3 relative shadow-sm">
+  <h1 class="text-2xl font-semibold">Event Management</h1>
+  <nav class="hidden md:block">
+    <ul class="flex items-center justify-center gap-3 text-lg">
+      <li>
+        <a href="{% url 'home' %}">Home</a>
+      </li>
+      <li>
+        <a href="">About us</a>
+      </li>
+      <li>
+        <a href="">Services</a>
+      </li>
+    </ul>
+  </nav>
+  <div class="flex items-center gap-4 relative">
+         {% comment %} Dropdown Toggle Button {% endcomment %}
+    <button
+      id="dropdownToggle"
+      type="button"
+      class="p-2 rounded-md bg-gray-200 hover:bg-gray-300 focus:outline-none"
+    >
+      ▼
+    </button>
+           {% comment %} Dropdown Menu  {% endcomment %}
+    <div id="dropdownMenu" class="absolute right-0 mt-48 w-48 bg-white border rounded shadow-md hidden z-10">
+      <ul class="py-2">
+        <li>
+          <a href="{% url "dahsboard" %}" class="block px-4 py-2 hover:bg-gray-100">
+            Dashboard
+          </a>
+        </li>
+        <li>
+          <a href="" class="block px-4 py-2 hover:bg-gray-100">
+            Settings
+          </a>
+        </li>
+        <li>
+          <form method="POST" action="{% url "sign-out" %}">
+            {% csrf_token %}
+            <button type='submit' class="block px-4 py-2 hover:bg-gray-100 w-full text-left">
+              Logout
+            </button>
+          </form>
+        </li>
+      </ul>
+    </div>
+  </div>
+</header>
