@@ -168,7 +168,8 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 
 
 
-FRONTEND_URL='http://127.0.0.1:8000'
+
+FRONTEND_URL='https://event-management-q5rr.onrender.com'
 
 
 LOGIN_URL='sign-in'
