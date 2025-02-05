@@ -1,0 +1,74 @@
+{% extends "admin/dashboard.html" %}
+{% block content %}
+
+  <h1 class="text-2xl font-semibold">All Participants</h1>
+  <ul>
+    {% for message in messages %}
+      <li class="bg-green-500 p-3 rounded-sm">{{message}}</li>
+    {% endfor %}
+  </ul>
+  <div class='border border-b-gray-500 border-dashed'></div>
+  <div class="container mx-auto p-6">
+    <div class="overflow-x-auto">
+      <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+        <thead class="bg-gray-100">
+          <tr>
+            <th
+              class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Number
+            </th>
+            <th
+              class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Username
+            </th>
+            <th
+              class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Email
+            </th>
+            <th
+              class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              User ID
+            </th>
+
+            <th
+              class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Action
+            </th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+        <!-- Example static data -->
+          {% for user in users %}
+            <tr class="hover:bg-gray-50">
+              <td class="px-4 py-4 whitespace-nowrap">{{forloop.counter}}</td>
+              <td class="px-4 py-4 whitespace-nowrap">{{user.first_name}} {{user.last_name}}</td>
+              <td class="px-4 py-4 whitespace-nowrap">{{user.email}}</td>
+              <td class="px-4 py-4 whitespace-nowrap">{{user.id}}</td>
+
+              <td class="px-4 py-4 whitespace-nowrap">
+                <div class="flex items-center gap-4">
+                  <a href="{% url "update-user" user.id %}" class="px-2 py-1 rounded-md bg-[#77B254] hover:bg-[#5B913B] text-white">
+                    Edit
+                  </a>
+                  <form action='{% url "delete-participant" user.id %}' method="POST">
+                    {% csrf_token %}
+                    <button class="px-2 py-1 rounded-md bg-[#D2665A] hover:bg-[#B82132] text-white">
+                      DELETE
+                    </button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+{% endblock content %}

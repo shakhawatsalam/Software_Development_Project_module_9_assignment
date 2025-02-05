@@ -1,11 +1,11 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.mail import send_mail
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.contrib.auth.tokens import default_token_generator
 from django.conf import settings
 
-
+# SENDING MAIL WHILE REGISTERING
 @receiver(post_save, sender=User)
 def send_activation_email(sender, instance, created, **kwargs):
     if created:
@@ -19,3 +19,14 @@ def send_activation_email(sender, instance, created, **kwargs):
             print("Email Send Successfully 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀")
         except Exception as e:
             print(f"Filed to send email to {instance.email}: {str(e)} 🚀🚀🚀")
+            
+# SETTING DEFAULT ROLE WHILE REGISTERING
+@receiver(post_save, sender=User)         
+def assign_role(sender, instance, created, **kwargs):
+    if created:
+        participants, createdgroup = Group.objects.get_or_create(name='participants')
+        instance.groups.add(participants)
+        instance.save()
+            
+            
+    

@@ -1,0 +1,12 @@
+{% extends "admin/dashboard.html" %}
+{% block content %}
+    <div class="flex justify-center items-center flex-col ">
+
+        <form method="POST">
+            {% csrf_token %}
+            {{form}}
+            <button type="submit" class="mt-5 px-2 py-1 text-white bg-blue-500 rounded">Create Group</button>
+        </form>
+
+    </div>
+{% endblock content %}

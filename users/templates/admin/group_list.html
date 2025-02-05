@@ -1,0 +1,60 @@
+{% extends "admin/dashboard.html" %}
+{% block content %}
+  <ul>
+    {% for message in messages %}
+      <li class="bg-green-500 p-3">{{message}}</li>
+    {% endfor %}
+  </ul>
+  <div class="w-2/3 mx-auto my-8">
+    <div class="flex items-start justify-between">
+      <h2 class="text-2xl font-bold mb-4">Groups and Permissions</h2>
+      <a href="{% url "create-group" %}" class="px-2 py-1 rounded-md bg-[#213555] hover:bg-[#3E5879] text-white">
+        Add Group +
+      </a>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="table-auto w-full border-collapse border border-gray-300">
+        <thead>
+          <tr class="bg-gray-100">
+            <th class="border border-gray-300 px-4 py-2">Group Name</th>
+            <th class="border border-gray-300 px-4 py-2">Permissions</th>
+            <th class="border border-gray-300 px-4 py-2">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+            <!-- Example group data -->
+
+          {% for group in groups %}
+            <tr class="odd:bg-white even:bg-gray-50">
+              <td class="border border-gray-300 px-4 py-2 font-medium">
+                {{group.name}}
+              </td>
+              <td class="border border-gray-300 px-4 py-2">
+                <ul class="list-disc list-inside">
+                  {% for permission in group.permissions.all %}
+                    <li>{{permission.name}}</li>
+                  {%empty%}
+                    <span class="text-gray-500 italic">No Permissions assigned</span>
+                  {% endfor %}
+                </ul>
+              </td>
+              <td class="border border-gray-300 px-4 py-2">
+                <form action='{% url "delete-group" group.id %}' method="POST">
+                  {% csrf_token %}
+                  <button class="px-2 py-1 rounded-md bg-[#D2665A] hover:bg-[#B82132] text-white">
+                    DELETE
+                  </button>
+                </form>
+              </td>
+            </tr>
+
+          {% endfor %}
+
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock content %}
+

@@ -1,33 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Sign in{% endblock title %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans+Bengali:wght@100..900&display=swap"
-            rel="stylesheet" />
-        <link rel="stylesheet" href="{% static "css/output.css" %}">
-        <style>
-            body {
-                font-family: "Inter", sans-serif;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="bg-gray-50 h-screen w-screen flex justify-center items-center">
-            <div class="bg-white shadow-sm p-3 rounded-lg h-80 w-96">
-                <h1 class="text-xl font-semibold text-center p-3">Sign In</h1>
-                <form method="POST">
-                    {% csrf_token %}
-                    {{form}}
-                    <button type='submit' class="w-full bg-[#213555] hover:bg-[#3E5879] mt-5 py-2 px-4 rounded-md text-white">Sign In</button>
-                    <p class="my-3">If you don't have account <a href="{% url "sign-up" %}" class="text-cyan-500">Sign up!</a></p>
-                </form>
-            </div>
+{% block home %}
+    <div class="bg-gray-50 h-[70vh] flex justify-center items-center">
+        <div class="bg-white shadow-sm p-3 rounded-lg h-80 w-96">
+            <h1 class="text-xl font-semibold text-center p-3">Sign In</h1>
+            <form method="POST" action="{% url 'sign-in' %}">
+                {% csrf_token %}
+                {{form}}
+                <button type='submit' class="w-full bg-[#213555] hover:bg-[#3E5879] mt-5 py-2 px-4 rounded-md text-white">Sign In</button>
+                <p class="my-3">If you don't have account <a href="{% url "sign-up" %}" class="text-cyan-500">Sign up!</a></p>
+            </form>
         </div>
-    </body>
-</html>
+    </div>
+{% endblock home %}

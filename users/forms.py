@@ -1,6 +1,6 @@
 from django  import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User 
+from django.contrib.auth.models import User , Group, Permission
 from django.contrib.auth.forms import AuthenticationForm
 from events.forms import StyleFormMixin
 
@@ -46,3 +46,39 @@ class RegistrationForm(StyleFormMixin, forms.ModelForm):
 class LoginForm(StyleFormMixin,AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        
+        
+# ASSIGN ROLE FORM
+class AssignedRoleForm(StyleFormMixin,forms.Form):
+    role = forms.ModelChoiceField(
+        queryset= Group.objects.all(),
+        empty_label="Select a Role"
+    )
+    
+# CREATE GROUP FORM
+class CreateGroupForm(StyleFormMixin, forms.ModelForm):
+    permissions = forms.ModelMultipleChoiceField(
+        queryset=Permission.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required= False,
+        label='Assign Permission'
+    )
+    
+    class Meta:
+        model= Group
+        fields= ['name',  'permissions']
+        
+        
+# USER UPDATE FORM
+
+class UpdateUserForm(StyleFormMixin, forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username','email','first_name', 'last_name']
+        
+    
+      
+    
+    
+    
+    

@@ -19,43 +19,13 @@
   </head>
   <body class="bg-gray-50 p-6">
     <div class="max-w-[1400px] mx-auto">
-      {% comment %} Header   {% endcomment %}
-      <header class="flex justify-between items-center mb-8">
-        <h1 class="text-2xl font-semibold">Event Management Dashboard</h1>
-        <nav class="hidden md:block">
-          <ul class="flex items-center justify-center gap-3 text-lg">
-            <li class="bg-[#213555] text-white py-1 px-2 rounded-md">
-              <a href="{% url 'dahsboard-category' %}">All Categories</a>
-            </li>
-            <li class="bg-[#213555] text-white py-1 px-2 rounded-md">
-              <a href="{% url 'dahsboard-participant' %}">All Participant</a>
-            </li>
-            <li class="bg-[#213555] text-white py-1 px-2 rounded-md">
-              <a href="{% url 'dahsboard' %}">All Events</a>
-            </li>
-          </ul>
-        </nav>
-        <div class="flex items-center gap-4">
-          <a href="{% url 'home' %}" class="p-2 rounded-md bg-[#213555] hover:bg-[#3E5879] text-white">
-            Home
-          </a>
-          <a href="{% url 'create-event' %}" class="p-2 rounded-md bg-[#213555] hover:bg-[#3E5879] text-white">
-            Create Event
-          </a>
-          <a href="{% url 'create-category' %}" class="p-2 rounded-md bg-[#213555] hover:bg-[#3E5879] text-white">
-            Create Category
-          </a>
-          <a href="{% url 'create-participant' %}" class="p-2 rounded-md bg-[#213555] hover:bg-[#3E5879] text-white">
-            Create Participant
-          </a>
-        </div>
-      </header>
+      {% include "admin/admin_nav.html" %}
 
       <main>
         {% comment %} Stats Grid  {% endcomment %}
         <div class="grid md:grid-cols-4 gap-6 mb-8">
           <!-- Total Task  -->
-          <a href="{% url 'dahsboard-participant' %}">
+          <a href="#">
             <div class="bg-white rounded-xl p-6 shadow-sm">
               <h3 class="text-sm font-medium text-gray-500 mb-4">TOTAL PARTICIPANTS</h3>
               <div class="flex justify-between items-start">
@@ -171,6 +141,22 @@
 
       </main>
     </div>
+{% comment %} scripts  {% endcomment %}
+    <script>
+      // Toggle dropdown menu visibility
+      document.getElementById('dropdownToggle').addEventListener('click', function () {
+        const dropdown = document.getElementById('dropdownMenu');
+        dropdown.classList.toggle('hidden');
+      });
 
+      // Optional: Hide dropdown if user clicks outside
+      document.addEventListener('click', function (e) {
+        const dropdown = document.getElementById('dropdownMenu');
+        const toggle = document.getElementById('dropdownToggle');
+        if (!toggle.contains(e.target) && !dropdown.contains(e.target)) {
+          dropdown.classList.add('hidden');
+        }
+      });
+    </script>
   </body>
 </html>
