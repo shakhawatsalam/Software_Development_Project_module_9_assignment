@@ -1,10 +1,12 @@
 from django  import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User , Group, Permission
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import Group, Permission
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, PasswordResetForm, SetPasswordForm
 from events.forms import StyleFormMixin
+from users.models import CustomUser
+from django.contrib.auth import get_user_model
 
-
+User = get_user_model()
 # REGISTRATION FORM USING  MODEL FORM
 class RegistrationForm(StyleFormMixin, forms.ModelForm):
     password =  forms.CharField(widget=forms.PasswordInput)
@@ -49,11 +51,15 @@ class LoginForm(StyleFormMixin,AuthenticationForm):
         
         
 # ASSIGN ROLE FORM
-class AssignedRoleForm(StyleFormMixin,forms.Form):
+class AssignedRoleForm(StyleFormMixin,forms.ModelForm):
     role = forms.ModelChoiceField(
         queryset= Group.objects.all(),
         empty_label="Select a Role"
     )
+    
+    class Meta:
+        model = User
+        fields = [] 
     
 # CREATE GROUP FORM
 class CreateGroupForm(StyleFormMixin, forms.ModelForm):
@@ -77,7 +83,21 @@ class UpdateUserForm(StyleFormMixin, forms.ModelForm):
         fields = ['username','email','first_name', 'last_name']
         
     
-      
+
+
+# Password Related Form  
+class CustomPasswordChangeForm(StyleFormMixin, PasswordChangeForm):
+    pass
+
+class CustomPasswordResetForm(StyleFormMixin, PasswordResetForm):
+    pass
+class CustomPasswordResetConfirmForm(StyleFormMixin, SetPasswordForm):
+    pass
+
+class EditProfileForm(StyleFormMixin,forms.ModelForm):
+    class Meta:
+        model = CustomUser      
+        fields = ['email', 'first_name', 'last_name', 'phone', 'profile_image']
     
     
     

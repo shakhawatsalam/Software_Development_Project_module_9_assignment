@@ -3,13 +3,14 @@
 {% load static %}
 {% block home %}
     <div class="bg-gray-50 h-[70vh] flex justify-center items-center">
-        <div class="bg-white shadow-sm p-3 rounded-lg h-80 w-96">
+        <div class="bg-white shadow-sm p-3 rounded-lg  w-96">
             <h1 class="text-xl font-semibold text-center p-3">Sign In</h1>
             <form method="POST" action="{% url 'sign-in' %}">
                 {% csrf_token %}
                 {{form}}
                 <button type='submit' class="w-full bg-[#213555] hover:bg-[#3E5879] mt-5 py-2 px-4 rounded-md text-white">Sign In</button>
                 <p class="my-3">If you don't have account <a href="{% url "sign-up" %}" class="text-cyan-500">Sign up!</a></p>
+                <p class="text-cyan-500"><a href="{% url "password_reset" %}">Forgot Password</a></p>
             </form>
         </div>
     </div>

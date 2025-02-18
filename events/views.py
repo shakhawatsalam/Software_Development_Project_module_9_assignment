@@ -5,7 +5,12 @@ from events.models import Event, Category
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
 from  users.views import is_admin, is_organizer, is_participant
-
+from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.views.generic.base import ContextMixin
+from django.views.generic import UpdateView, DeleteView, DetailView
+from django.urls import reverse_lazy
+from django.http import HttpResponseRedirect
 def is_organizer_or_admin(user):
     return is_organizer(user) or is_admin(user)
 
@@ -57,6 +62,31 @@ def create_event(request):
     context = {"form" : event_form}
     return render(request, 'create-event.html', context)
 
+# Create Event Class Based View
+class CreateEventView(ContextMixin,LoginRequiredMixin,View):
+    login_url = 'sign-in'
+    template_name = 'create-event.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = kwargs.get('form', EventModelForm())
+        return context
+    
+    # GET  
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data()
+        return render(request, self.template_name, context)
+    
+    # POST
+    def post(self, request, *args, **kwargs):
+        event_form = EventModelForm(request.POST, request.FILES)
+        if event_form.is_valid():
+            event = event_form.save()
+            messages.success(request,"Event Created Successfully")
+            return redirect('create-event')
+        
+    
+
 #Update Event
 @login_required
 @user_passes_test(is_organizer_or_admin, login_url='no-permission')
@@ -72,6 +102,25 @@ def update_event(request, id):
     context = {"form" : event_form, "id": id}
     return render(request, 'create-event.html', context)
 
+#Update Event Class Based View
+class UpdateEventView(LoginRequiredMixin, UpdateView):
+    model = Event
+    form_class = EventModelForm
+    template_name = 'create-event.html'
+    pk_url_kwarg = 'id'
+    
+    
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        event_form = EventModelForm(request.POST,request.FILES, instance=self.object)
+        if event_form.is_valid():
+            event_form.save()
+            messages.success(request, "Event Updated Successfully")
+            return redirect('update-event', self.object.id)
+        
+    
+
+
 # Delete Event
 @login_required
 @user_passes_test(is_organizer_or_admin, login_url='no-permission')
@@ -84,6 +133,25 @@ def delete_event(request, id):
     else:
         messages.error(request, 'Some thing went wrong')
         return  redirect('dashboard')
+    
+# Delete Event Class Based View
+class DeleteEventView(LoginRequiredMixin, DeleteView):
+    model = Event
+    pk_url_kwarg = 'id'
+    success_url = reverse_lazy('dashboard') 
+    
+    
+    def post(self, request, *args, **kwargs):
+        try:
+            self.object = self.get_object()
+            self.object.delete()
+            messages.success(request, "Event Deleted Successfully")
+            
+        except Exception as e:
+            messages.error(request, f"An Error occurred: {e}")
+        
+        return HttpResponseRedirect(self.success_url)
+            
 
 
 # Event Details 
@@ -91,6 +159,14 @@ def event_details(request, event_id):
     event = Event.objects.get(id= event_id)
     
     return render(request, 'event_details.html', {'event': event})
+
+# Event Details Class Based View
+class EventDetailsView(DetailView):
+    model = Event
+    template_name = 'event_details.html'
+    context_object_name = 'event'
+    pk_url_kwarg = 'event_id'
+    
 
 # RSVP EVENT
 @login_required
@@ -126,6 +202,31 @@ def create_category(request):
     context = {"form" : category_form}
     return render(request, 'create-category.html', context)
 
+
+# Create Category Class Based View
+class CreateCategoryView(ContextMixin,LoginRequiredMixin,View):
+    login_url = 'sign-in'
+    template_name = 'create-category.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = kwargs.get('form', CategoryModelForm())
+        return context
+    
+    # GET  
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data()
+        return render(request, self.template_name, context)
+    
+    # POST
+    def post(self, request, *args, **kwargs):
+        category_form = CategoryModelForm(request.POST)
+        if category_form.is_valid():
+            category_form.save()
+            messages.success(request,"Category Created Successfully")
+            return redirect('create-category')
+    
+
 # Update Category
 @login_required
 @user_passes_test(is_organizer_or_admin, login_url='no-permission')
@@ -141,7 +242,22 @@ def update_category(request,  id):
     context = {"form" : category_form, "id" :  id}
     return render(request, 'create-category.html', context)
 
-# Delete Category
+# Update Category Class Based View
+
+class UpdateCategoryView(LoginRequiredMixin, UpdateView):
+    model = Category
+    form_class = CategoryModelForm
+    template_name = 'create-category.html'
+    pk_url_kwarg = 'id'
+    
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        category_form = CategoryModelForm(request.POST, instance=self.object)
+        if category_form.is_valid():
+            category_form.save()
+            messages.success(request,"Category update Successfully")
+            return redirect('update-category', self.object.id)
+# Delete Category       
 @login_required
 @user_passes_test(is_organizer_or_admin, login_url='no-permission')
 def  delete_category(request,id):
@@ -155,6 +271,23 @@ def  delete_category(request,id):
         return  redirect('categories-list')
 
 
+# Delete Category  Class Based View
+class DeleteCategoryView(LoginRequiredMixin, DeleteView):
+    model = Category
+    pk_url_kwarg = 'id'
+    success_url = reverse_lazy('categories-list') 
+    
+    
+    def post(self, request, *args, **kwargs):
+        try:
+            self.object = self.get_object()
+            self.object.delete()
+            messages.success(request, "Category Deleted Successfully ✅✅✅")
+            
+        except Exception as e:
+            messages.error(request, f"An Error occurred: {e}")
+        
+        return HttpResponseRedirect(self.success_url)
 
 
   

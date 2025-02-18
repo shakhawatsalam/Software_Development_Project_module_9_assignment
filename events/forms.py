@@ -34,7 +34,6 @@ class StyleFormMixin:
                         'placeholder': f"Enter {field.label.lower()}"
                     })
             else:
-                print("Inside else")
                 field.widget.attrs.update({
                     'class': self.default_classes
                 })

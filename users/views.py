@@ -1,16 +1,22 @@
 from django.shortcuts import render, redirect
-from users.forms import RegistrationForm, LoginForm, AssignedRoleForm, CreateGroupForm, UpdateUserForm
+from users.forms import RegistrationForm, LoginForm, AssignedRoleForm, CreateGroupForm, UpdateUserForm, CustomPasswordChangeForm, CustomPasswordResetConfirmForm, CustomPasswordResetForm,EditProfileForm
 from django.contrib.auth  import login, logout
 from django.contrib import  messages
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Group
 from events.models import Event, Category
 from django.contrib.auth.tokens import default_token_generator
-from django.http import HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
 from django.db.models import Prefetch
+from django.views.generic import ListView, UpdateView, DeleteView, TemplateView
+from django.urls import reverse_lazy
+from django.views.generic.base import ContextMixin
+from django.views import View
+from django.contrib.auth.views import PasswordChangeView, PasswordResetView, PasswordResetConfirmView
+from django.contrib.auth import get_user_model
 
-
-
+User = get_user_model()
 # CHECKING USER'S ROLE
 # Test for users
 def is_admin(user):
@@ -67,7 +73,81 @@ def sign_out(request):
     if request.method == 'POST':
         logout(request)
         return redirect('sign-in')
+# PROFILE VIEW
+class ProfileView(TemplateView):
+    template_name = 'accounts/profile.html'
+    # pass
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        
+        context['username'] = user.username
+        context['email'] = user.email 
+        context['name'] = user.get_full_name()
+        context['phone'] = user.phone
+        context['profile_image'] = user.profile_image
+        context['member_since'] = user.date_joined
+        context['last_login'] = user.last_login
+        return context
+    
+# EDIT VIEW
+class EditProfileView(UpdateView):
+    model = User
+    form_class = EditProfileForm
+    template_name = 'accounts/update_profile.html'
+    context_object_name = 'form'
+    
+    def get_object(self):
+        return self.request.user
+    
+    def form_valid(self, form):
+        form.save()
+        return redirect('profile')
+ 
+# CHANGE PASSWORD VIEW
+class ChangePassword(PasswordChangeView):
+    template_name = 'accounts/password_change.html'
+    form_class = CustomPasswordChangeForm
+
+
+# CUSTOM PASSWORD RESET VIEWS
+class CustomPasswordResetView(PasswordResetView):
+    form_class = CustomPasswordResetForm
+    template_name = 'registration/reset_password.html'
+    success_url = reverse_lazy('sign-in')
+    html_email_template_name = 'registration/reset_email.html'
+    
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['protocol'] = 'https' if self.request.is_secure() else 'http'
+        context['domain'] = self.request.get_host()
+        
+        return context
+    def form_valid(self, form):
+        messages.success(
+            self.request, 'A Reset email sent. Please check your email'
+        )
+        return super().form_valid(form)
+    
+    
+# CUSTOM PASSWORD RESET CONFIRM VIEW
+class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+    form_class = CustomPasswordResetConfirmForm
+    template_name = 'registration/reset_password.html'
+    success_url = reverse_lazy('sign-in')
+    
+    def form_valid(self, form):
+        messages.success(
+            self.request, 'Password reset successfully'
+        )
+        return super().form_valid(form)
+    
+    
+
+
+  
 # ADMIN DASHBOARD ----> VIEW'S
 @login_required
 @user_passes_test(is_admin, login_url='no-permission')
@@ -108,6 +188,30 @@ def assign_role(request, user_id):
             return redirect('admin-view-userlist')
     return render(request, 'admin/assign_role.html', {"form" : form})
 
+# ASSIGN ROLE CLASS BASED VIEWS
+class AssignRoleView(LoginRequiredMixin,PermissionRequiredMixin,UpdateView):
+    model = User
+    form_class = AssignedRoleForm
+    template_name = 'admin/assign_role.html'
+    context_object_name = 'user'
+    pk_url_kwarg = 'user_id'
+    permission_required = "auth.change_user"
+    # success_url = 'admin-view-userlist'
+    
+    
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = AssignedRoleForm(request.POST)
+        
+        if form.is_valid():
+            role = form.cleaned_data.get('role')
+            self.object.groups.clear()
+            self.object.groups.add(role)
+            messages.success(request, f'User {self.object.username} has been assigned to the {role.name} role')
+            return redirect('admin-view-userlist')
+        return redirect('admin-view-userlist')
+    def get_success_url(self):
+        return reverse_lazy('admin-dashboard')
 
 
 # CREATE GROUP
@@ -123,6 +227,29 @@ def create_group(request):
             return redirect('group-list')
     return render(request, 'admin/create_group.html', {'form': form})
 
+# CREATE GROUP CLASS BASED VIEW
+class CreateGroupView(ContextMixin,LoginRequiredMixin,View):
+    login_url = 'sign-in'
+    template_name = 'admin/create_group.html'
+    
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = kwargs.get('form', CreateGroupForm())
+        return context
+    
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        return render(request,  self.template_name,  context)
+    
+    def post(self, request, *args, **kwargs):
+        form = CreateGroupForm(request.POST)
+        
+        if form.is_valid():
+            group = form.save()
+            messages.success(request, f'Group {group.name} has been created successfully ✅✅✅✅')
+            return redirect('create-group')
+
 
 # VIEW ALL GROUP
 @login_required
@@ -132,6 +259,14 @@ def group_list(request):
     return render(request, 'admin/group_list.html', {"groups": groups})
 
 
+# VIEW ALL GROUP
+class GrouplistView(ListView):
+    model = Group
+    context_object_name = 'groups'
+    template_name = 'admin/group_list.html'
+    queryset = Group.objects.prefetch_related('permissions').all()
+
+# DELETE GROUP
 @login_required
 @user_passes_test(is_admin, login_url='no-permission')
 def delete_group(request, group_id):
@@ -143,6 +278,27 @@ def delete_group(request, group_id):
     else:
         messages.error(request, 'Some thing went wrong')
         return  redirect('group-list')
+
+# DELETE GROUP
+class DeleteGroupView(LoginRequiredMixin,DeleteView):
+    model = Group
+    login_url = 'sign-in'
+    pk_url_kwarg ='group_id'
+    success_url = reverse_lazy('group-list')
+    
+    
+    def post(self, request, *args, **kwargs):
+        try:
+            self.object = self.get_object()
+            self.object.delete()
+            messages.success(request, "Group Deleted Successfully ss")
+        except Exception as e:
+            messages.error(request, f"An Error occurred: {e}")
+    
+        return HttpResponseRedirect(self.success_url)
+        
+
+
 
 # VIEW ALL PARTICIPANTS
 @login_required
@@ -172,6 +328,21 @@ def update_participants(request, user_id):
     return render(request,'admin/update_user.html', {"form": form})
 
 
+# UPDATE PARTICIPANT CLASS BASED VIES
+class UpdateParticapantView(LoginRequiredMixin, UpdateView):
+    model = User
+    form_class = UpdateUserForm
+    template_name = 'admin/update_user.html'
+    pk_url_kwarg = 'user_id'
+    success_url = 'participant-list'
+    
+    
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.save()
+        messages.success(request, "Participant Updated Successfully")
+        return redirect(self.success_url)
+
 # DELETE PARTICIPANT
 @login_required
 @user_passes_test(is_admin, login_url='no-permission')
@@ -184,6 +355,24 @@ def delete_participants(request, user_id):
     else:
         messages.error(request, 'Some thing went wrong')
         return  redirect('participant-list')
+    
+# DELETE PARTICIPANT CLASS BASED VIEW
+class DeleteParticipantView(LoginRequiredMixin, DeleteView):
+    model = User
+    login_url = 'sign-in'
+    pk_url_kwarg = 'user_id'
+    success_url = reverse_lazy('participant-list')
+    
+    def post(self, request,*args, **kwargs):
+        try:
+            self.object = self.get_object()
+            self.object.delete()
+            messages.success(request, "Participant Deleted Successfully")
+        except Exception as e:
+            messages.error(request, f'An Error occurred: {e}')
+            
+        return HttpResponseRedirect(self.success_url)
+    
     
  
 # ORGANIZER DASHBOARD ----> VIEW'S
@@ -205,6 +394,13 @@ def categories_list(request):
     
     return render(request, 'organizer/categories_list.html', context)
 
+
+# VIEW ALL CATEGORIES CLASS BASED VIEW
+class CategoryListView(ListView):
+    model = Category
+    context_object_name = 'categories'
+    template_name = 'organizer/categories_list.html'
+    queryset = Category.objects.all()
 
 # PARTICIPANTS DASHBOARD ----> VIEW'S
 # EVENT'S THAT ARE LOGIN USER PARTICIPATE

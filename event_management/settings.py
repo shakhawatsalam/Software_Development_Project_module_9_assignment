@@ -16,6 +16,7 @@ SECRET_KEY = 'django-insecure-o1s)g$^+o3*@qr_ln0s)wo28=rbl@91k-mfdgw#zxtr_8!71xe
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+AUTH_USER_MODEL = 'users.CustomUser'
 CSRF_TRUSTED_ORIGINS=['https://*.onrender.com', 'http://127.0.0.1:8000']
 
 
@@ -83,25 +84,25 @@ WSGI_APPLICATION = 'event_management.wsgi.application'
 # }
 
 # For Postgres
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'event_management',
-#         'USER': 'postgres',
-#         'PASSWORD': 'shawon',
-#         'HOST': 'localhost',
-#         'PORT': '5432'
-#     }
-# }
-
-
 DATABASES = {
-    'default': dj_database_url.config(
-        # Replace this value with your local database's connection string.
-        default='postgresql://event_management_h1rw_user:hEaF7ExdvIPP0PUsjCGOBEwy1WW8UOP6@dpg-cuhojvl6l47c73duitvg-a.oregon-postgres.render.com/event_management_h1rw',
-        conn_max_age=600
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'event_management',
+        'USER': 'postgres',
+        'PASSWORD': 'shawon',
+        'HOST': 'localhost',
+        'PORT': '5432'
+    }
 }
+
+
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         # Replace this value with your local database's connection string.
+#         default='postgresql://event_management_h1rw_user:hEaF7ExdvIPP0PUsjCGOBEwy1WW8UOP6@dpg-cuhojvl6l47c73duitvg-a.oregon-postgres.render.com/event_management_h1rw',
+#         conn_max_age=600
+#     )
+# }
 
 
 # Password validation
@@ -128,7 +129,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Dhaka'
 
 USE_I18N = True
 
@@ -153,12 +154,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 
-# EMAIL_BACKEND = config('EMAIL_BACKEND')
-# EMAIL_HOST = config('EMAIL_HOST')
-# EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
-# EMAIL_PORT = config('EMAIL_PORT', cast=int)
-# EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-# EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+
 EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
 EMAIL_HOST = config('EMAIL_HOST', default='smtp.gmail.com')
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
@@ -169,7 +165,8 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 
 
 
-FRONTEND_URL='https://event-management-q5rr.onrender.com'
+# FRONTEND_URL='https://event-management-q5rr.onrender.com'
+FRONTEND_URL='http://127.0.0.1:8000'
 
 
 LOGIN_URL='sign-in'

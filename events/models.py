@@ -1,5 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
+from django.conf import settings
 # Create your models here.
 
 class Category(models.Model):
@@ -18,7 +19,7 @@ class Event(models.Model):
     date  = models.DateField()
     time = models.TimeField()
     location = models.CharField(max_length=100)
-    participants = models.ManyToManyField(User, related_name='participants')
+    participants = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='participants')
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
