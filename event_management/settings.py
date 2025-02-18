@@ -84,25 +84,25 @@ WSGI_APPLICATION = 'event_management.wsgi.application'
 # }
 
 # For Postgres
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'event_management',
-        'USER': 'postgres',
-        'PASSWORD': 'shawon',
-        'HOST': 'localhost',
-        'PORT': '5432'
-    }
-}
-
-
 # DATABASES = {
-#     'default': dj_database_url.config(
-#         # Replace this value with your local database's connection string.
-#         default='postgresql://event_management_h1rw_user:hEaF7ExdvIPP0PUsjCGOBEwy1WW8UOP6@dpg-cuhojvl6l47c73duitvg-a.oregon-postgres.render.com/event_management_h1rw',
-#         conn_max_age=600
-#     )
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'event_management',
+#         'USER': 'postgres',
+#         'PASSWORD': 'shawon',
+#         'HOST': 'localhost',
+#         'PORT': '5432'
+#     }
 # }
+
+
+DATABASES = {
+    'default': dj_database_url.config(
+        # Replace this value with your local database's connection string.
+        default='postgresql://event_management_v3mg_user:TQ7v3FkYJ9HmaSYBVuHE30LM9aMAYnyZ@dpg-cuqa7ilumphs73eejmmg-a.oregon-postgres.render.com/event_management_v3mg',
+        conn_max_age=600
+    )
+}
 
 
 # Password validation
@@ -165,8 +165,8 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 
 
 
-# FRONTEND_URL='https://event-management-q5rr.onrender.com'
-FRONTEND_URL='http://127.0.0.1:8000'
+FRONTEND_URL='https://event-management-q5rr.onrender.com'
+# FRONTEND_URL='http://127.0.0.1:8000'
 
 
 LOGIN_URL='sign-in'
