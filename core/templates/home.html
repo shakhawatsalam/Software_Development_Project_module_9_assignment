@@ -37,12 +37,13 @@
 
 
             {% comment %} Events Card Grid  {% endcomment %}
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-6">
 
       {% for event in events %}
         <div class="bg-white border border-gray-300 rounded-md shadow-md overflow-hidden flex justify-center items-end gap-3">
-            {% if event.image %}
-            <div class="h-40 bg-cover bg-center flex justify-center items-center flex-1" style="background-image: url('{{ event.image.url }}');">
+            {% if event.image%}
+            <div class="h-40 bg-cover bg-center flex justify-center items-center flex-1">
+              <img src="{{event.image.url}}" alt="Event Image">
             </div>
             {% else %}
             <div class="h-40 bg-[#D8C4B6] flex justify-center items-center flex-1">
