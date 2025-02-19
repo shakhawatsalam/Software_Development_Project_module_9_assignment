@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from events.forms import EventModelForm, CategoryModelForm
 from events.models import Event, Category 
-from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
 from  users.views import is_admin, is_organizer, is_participant
 from django.views import View
@@ -11,6 +10,9 @@ from django.views.generic.base import ContextMixin
 from django.views.generic import UpdateView, DeleteView, DetailView
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 def is_organizer_or_admin(user):
     return is_organizer(user) or is_admin(user)
 
